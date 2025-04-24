@@ -1,4 +1,5 @@
 import 'package:apptask/database_helper.dart';
+import 'package:apptask/menudrawer.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -119,66 +120,22 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Lista de Tarefas"),
         centerTitle: true,
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _txtTarefaController,
-                    decoration: const InputDecoration(labelText: "Nova Tarefa"),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: adicionarTarefa,
-                )
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _tarefas.length,
-                itemBuilder: (context, index) {
-                  final tarefa = _tarefas[index];
-
-                  return ListTile(
-                    leading: Checkbox(
-                      value: tarefa['status'] == 1,
-                      onChanged: (value) => marcarTarefa(index),
-                    ),
-                    title: Text(
-                      tarefa["tarefa"],
-                      style: TextStyle(
-                        decoration: tarefa['status'] == 1
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
-                        color:
-                            tarefa['status'] == 1 ? Colors.grey : Colors.black,
-                      ),
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            editarTarefa(index);
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => confirmarDelete(tarefa['id']),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
+      drawer: const Menudrawer(),
+      body: ListView.builder(
+        itemCount: 0,
+        itemBuilder: (context, index) {
+          return const ListTile();
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Colors.green,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
         ),
       ),
     );
