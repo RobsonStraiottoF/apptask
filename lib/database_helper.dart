@@ -2,17 +2,18 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static const String tableTarefa = "tarefas";
+  static const String tableContato = "contatos";
 
   static Future<Database> getDatabase() async {
     final dbPath = await getDatabasesPath();
     return openDatabase(
-      join(dbPath, 'dbTarefas.db'),
+      join(dbPath, 'dbContatos_v2.db'), // Alterado o nome do banco para 'dbContatos_v2.db'
       onCreate: (db, version) {
         return db.execute('''
-            create table $tableTarefa(
+            create table $tableContato(
               id integer primary key autoincrement,
-              tarefa text not null,
+              contato text not null,
+              numero text not null,
               status integer not null
             )
 ''');
@@ -21,27 +22,32 @@ class DatabaseHelper {
     );
   } //create
 
-  static Future<void> adicionarTarefa(String tarefa) async {
+  static Future<void> adicionarContato(String contato, String numero) async {
     final db = await getDatabase();
-    await db.insert(tableTarefa, {'tarefa': tarefa, 'status': 0});
+    await db.insert(tableContato, {
+      'contato': contato,
+      'numero': numero,
+      'status': 0
+    }); // Adicionado 'numero'
   } //Read
 
-  static Future<void> editarTarefa(int id, String tarefa, int status) async {
+  static Future<void> editarContato(int id, String contato, int status) async {
     final db = await getDatabase();
     await db.update(
-      tableTarefa,
-       {"tarefa":tarefa, "status": status},
-       where: "id = ?",
-       whereArgs: [id],
-       );
+      tableContato,
+      {"contato": contato, "status": status},
+      where: "id = ?",
+      whereArgs: [id],
+    );
   } //Update
 
-  static Future<List<Map<String, dynamic>>> getTarefa() async {
+  static Future<List<Map<String, dynamic>>> getContato() async {
     final db = await getDatabase();
-    return await db.query(tableTarefa);
+    return await db.query(tableContato);
   } //Read
-static Future<void> deletarTarefa(int id) async {
-  final db = await getDatabase();
-  await db.delete(tableTarefa, where: "id = ?", whereArgs: [id]);
-}
+
+  static Future<void> deletarContato(int id) async {
+    final db = await getDatabase();
+    await db.delete(tableContato, where: "id = ?", whereArgs: [id]);
+  }
 }
